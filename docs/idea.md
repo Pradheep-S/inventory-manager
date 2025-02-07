@@ -53,3 +53,4 @@ Smart Inventory Manager is a full-stack web application built using the **MERN s
 - Nodemailer for email notifications
 - Chart.js / Recharts for data visualization
 
+#### change made in dev branch
