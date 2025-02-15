@@ -4,6 +4,7 @@
     font-family: 'Arial', sans-serif;
     background-color: #121212; /* Dark background */
     color: #e0e0e0; /* Light text color */
+    overflow-x:hidden;
   }
   
   .contact {
@@ -15,7 +16,7 @@
   /* Contact Header */
   .contact-header {
     text-align: center;
-    padding: 60px 20px;
+    padding: 40px 10px;
     background-color: #1e1e1e; /* Darker background */
     width: 100%;
   }
@@ -68,13 +69,14 @@
   
   .form-group input,
   .form-group textarea {
-    width: 100%;
+    width: calc(100% - 20px); /* Adjust width to account for margin */
     padding: 10px;
     border: 1px solid #444;
     border-radius: 5px;
     background-color: #1e1e1e;
     color: #e0e0e0;
     font-size: 1rem;
+    margin-right: 20px; /* Add margin to the right */
   }
   
   .form-group textarea {
@@ -133,11 +135,29 @@
     color: #b0b0b0;
     margin: 0;
   }
+  /* Owner Details */
+.detail-item.owner {
+    margin-top: 20px; /* Add some spacing above the owner details */
+  }
   
+  .detail-item.owner .icon {
+    font-size: 1.5rem;
+    color: #007bff; /* Match the theme color */
+  }
+  
+  .detail-item.owner p {
+    font-size: 1rem;
+    color: #b0b0b0; /* Match the theme text color */
+    margin: 0;
+  }
   /* Map Section */
   .map-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically if needed */
     width: 100%;
-    padding: 60px 20px;
+    padding: 0px 20px;
     background-color: #1e1e1e; /* Darker background */
     text-align: center;
   }
@@ -147,6 +167,7 @@
     margin-bottom: 20px;
     color: #e0e0e0;
   }
+  
   
   .map {
     width: 100%;

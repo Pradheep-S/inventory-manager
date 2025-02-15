@@ -38,18 +38,24 @@ const Contact = () => {
           <div className="company-details">
             <h2>Our Details</h2>
             <div className="details">
+                {/* Owner Details */}
+              <div className="detail-item">
+                <span className="icon">👤</span>
+                <p>Owner: Prabakaran</p>
+              </div>
               <div className="detail-item">
                 <span className="icon">📍</span>
-                <p>123 Electrical Lane, Tech City, TX 12345, USA</p>
+                <p>150 Sathy Road, Kavindapadi, Erode</p>
               </div>
               <div className="detail-item">
                 <span className="icon">📞</span>
-                <p>+1 (123) 456-7890</p>
+                <p>+91 9942314140</p>
               </div>
               <div className="detail-item">
                 <span className="icon">✉️</span>
-                <p>info@mithunelectricals.com</p>
+                <p>mithunelectricals@gmail.com</p>
               </div>
+              
             </div>
           </div>
         </section>
@@ -60,7 +66,7 @@ const Contact = () => {
           <div className="map">
             <iframe
               title="Mithun Electricals Location"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.837434509369!2d-97.7407876849192!3d30.26756798244963!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8644b50e6a8b5f7f%3A0x4a3e8c1d8b5f7f1e!2sTech%20City%2C%20TX%2C%20USA!5e0!3m2!1sen!2sin!4v1633021234567!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3910.6997799760125!2d77.5379543!3d11.429322899999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba9152998f1c8c3%3A0xa496e13d1d721c54!2sMithun%20Electricals!5e0!3m2!1sen!2sin!4v1739590636244!5m2!1sen!2sin"
               width="100%"
               height="400"
               style={{ border: 0 }}

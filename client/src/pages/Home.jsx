@@ -37,6 +37,8 @@ const Home = () => {
           <div className="hero-shapes">
             <div className="shape shape-1"></div>
             <div className="shape shape-2"></div>
+            <div className="shape shape-4"></div>
+            <div className="shape shape-5"></div>
           </div>
         </section>
 
@@ -78,6 +80,8 @@ const Home = () => {
           {/* About Shapes */}
           <div className="about-shapes">
             <div className="shape shape-3"></div>
+            <div className="shape shape-6"></div>
+            <div className="shape shape-7"></div>
           </div>
         </section>
 
