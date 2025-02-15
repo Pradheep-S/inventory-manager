@@ -1,0 +1,130 @@
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1e1e1e; /* Dark background */
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Logo */
+  .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff6347; /* Tomato color for logo */
+    cursor: pointer;
+  }
+  
+  /* Nav Links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-links ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    cursor: pointer;
+  }
+  
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .nav-links a:hover {
+    color: #ff6347; /* Tomato color for hover effect */
+    transform: translateY(-2px); /* Slight lift effect */
+  }
+  
+  /* Profile Icon */
+.profile-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+  }
+  
+  .profile-icon span {
+    filter: brightness(2); /* Darken the emoji */
+    display: inline-block;
+    transition: filter 0.3s ease;
+  }
+  
+  .profile-icon:hover span {
+    filter: brightness(3); /* Brighten on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+  }
+  /* Hamburger Menu */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+  }
+  
+  /* Hamburger Animation */
+  .bar.change:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+  }
+  
+  .bar.change:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .bar.change:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hamburger {
+      display: flex;
+    }
+  
+    .nav-links {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 100%;
+      background-color: #1e1e1e;
+      flex-direction: column;
+      align-items: center;
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s ease;
+    }
+  
+    .nav-links.active {
+      height: 250px; /* Adjust height based on content */
+    }
+  
+    .nav-links ul {
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px 0;
+    }
+  
+    .nav-links a {
+      font-size: 1.2em;
+    }
+  }
