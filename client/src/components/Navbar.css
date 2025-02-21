@@ -116,13 +116,13 @@
     .logo {
       font-size: 1.5em;
       font-weight: bold;
-      color: #0066ff; /* Blue color for logo */
+      color: #ff6347; /* Blue color for logo */
       cursor: pointer;
       transition: color 0.3s ease;
     }
     
     .logo:hover {
-      color: #5c27fe; /* Gradient end color on hover */
+      color: #ff6347; /* Gradient end color on hover */
     }
     
     /* Nav Links */
@@ -152,7 +152,7 @@
     }
     
     .nav-links a:hover {
-      color: #0066ff; /* Blue color for hover effect */
+      color: #ff6347; /* Blue color for hover effect */
       transform: translateY(-2px); /* Slight lift effect */
     }
     
