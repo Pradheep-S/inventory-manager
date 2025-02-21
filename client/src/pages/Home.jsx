@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import Footer from "../components/Footer";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ const Home = () => {
             </div>
             <div className="card">
               <span className="icon">📞</span>
+
               <h3>24/7 Support</h3>
               <p>Our team is always available to assist you with your electrical needs.</p>
             </div>
@@ -86,9 +88,7 @@ const Home = () => {
         </section>
 
         {/* Footer */}
-        <footer className="footer">
-          <p>&copy; 2025 Mithun Electricals. All rights reserved.</p>
-        </footer>
+        <Footer />
       </div>
     </div>
   );

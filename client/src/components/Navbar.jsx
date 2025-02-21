@@ -17,7 +17,7 @@ const Navbar = () => {
           <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
           <li><Link to="/inventory" onClick={() => setIsMenuOpen(false)}>Inventory</Link></li>
           <li><Link to="/contact" onClick={() => setIsMenuOpen(false)}>Contact Us</Link></li>
-          <li><Link to="/admin-login" onClick={() => setIsMenuOpen(false)}>Login as Admin</Link></li>
+          <li><Link to="/admin-login" onClick={() => setIsMenuOpen(false)}>Admin</Link></li>
           
         </ul>
       </div>
