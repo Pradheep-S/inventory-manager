@@ -19,6 +19,7 @@ const Inventory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [expandedProductId, setExpandedProductId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -125,13 +126,21 @@ const Inventory = () => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(price);
   };
 
   const toggleDescription = (productId) => {
     setExpandedProductId(expandedProductId === productId ? null : productId);
   };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className={`inventory-body ${isModalOpen || isDeleteModalOpen ? 'modal-open' : ''}`}>
@@ -148,14 +157,22 @@ const Inventory = () => {
           </div>
         )}
 
-        <button 
-          className="open-form-btn" 
-          onClick={() => setIsModalOpen(true)}
-          disabled={loading}
-        >
-          <Plus size={20} />
-          Add Product
-        </button>
+        <div className="inventory-controls">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <button 
+            className="open-form-btn" 
+            onClick={() => setIsModalOpen(true)}
+            disabled={loading}
+          >
+            <Plus size={20} />
+            Add Product
+          </button>
+        </div>
 
         {isModalOpen && (
           <div className="modal-overlay" onClick={handleModalClose}>
@@ -291,7 +308,7 @@ const Inventory = () => {
               <p>No products found. Add your first product to get started!</p>
             </div>
           ) : (
-            products.map((product) => (
+            filteredProducts.map((product) => (
               <div key={product._id} className="product-item">
                 <div className="product-details" onClick={() => toggleDescription(product._id)}>
                   <span className="product-name">

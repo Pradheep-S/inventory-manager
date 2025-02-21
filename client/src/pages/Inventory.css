@@ -1,5 +1,4 @@
 /* Modern Dark Theme Inventory Management System */
-
 :root {
   --bg-primary: #1a1b1e;
   --bg-secondary: #23242a;
@@ -12,24 +11,32 @@
   --danger-hover: #ef4444;
   --success: #059669;
   --border-color: #2e2f35;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --transition: all 0.2s ease;
+}
+
+/* General Styles */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
 }
 
 .inventory-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg-primary);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 2rem;
-  color: var(--text-primary);
 }
 
 .inventory-container {
   background: var(--bg-secondary);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow);
   width: 100%;
   max-width: 1100px;
   border: 1px solid var(--border-color);
@@ -75,9 +82,62 @@ h2 {
 }
 
 /* Buttons */
+button {
+  transition: var(--transition);
+}
+
+.inventory-controls {
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Vertically center items */
+  gap: 1rem; /* Add spacing between input and button */
+  margin-bottom: 1rem; /* Bottom margin for the entire control row */
+}
+
+.inventory-controls input {
+  flex: 1; /* Allow input to take up remaining space */
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6; /* Light gray background */
+  border: 1px solid #d1d5db; /* Light gray border */
+  border-radius: 0.5rem;
+  color: #1f2937; /* Dark gray text */
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease; /* Smooth transition for hover and focus */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* Hover State for Input */
+.inventory-controls input:hover {
+  border-color: #9ca3af; /* Slightly darker gray border on hover */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow on hover */
+}
+
+/* Focus State for Input */
+.inventory-controls input:focus {
+  border-color: #3b82f6; /* Blue border on focus */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Blue glow on focus */
+  background-color: #ffffff; /* White background on focus for contrast */
+}
+
+/* Placeholder Text */
+.inventory-controls input::placeholder {
+  color: #6b7280; /* Medium gray placeholder */
+  opacity: 1; /* Fully visible */
+}
+
+/* Disabled State for Input */
+.inventory-controls input:disabled {
+  background-color: #e5e7eb; /* Lighter gray background for disabled state */
+  border-color: #d1d5db; /* Light gray border for disabled state */
+  color: #9ca3af; /* Gray text for disabled state */
+  cursor: not-allowed; /* Disabled cursor */
+}
+
+/* Add Product Button */
 .open-form-btn {
-  background-color: var(--accent-primary);
-  color: white;
+  background-color: #7c3aed; /* Blue background */
+  color: white; /* White text */
   padding: 0.75rem 1.25rem;
   border: none;
   border-radius: 0.5rem;
@@ -86,12 +146,24 @@ h2 {
   align-items: center;
   gap: 0.5rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease; /* Smooth transition for hover */
 }
 
+/* Hover State for Button */
 .open-form-btn:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-1px);
+  background-color: #2563eb; /* Darker blue on hover */
+  transform: translateY(-1px); /* Slight lift on hover */
+}
+
+/* Active State for Button */
+.open-form-btn:active {
+  transform: translateY(0); /* Reset lift on click */
+}
+
+/* Disabled State for Button */
+.open-form-btn:disabled {
+  background-color: #9ca3af; /* Gray background for disabled state */
+  cursor: not-allowed; /* Disabled cursor */
 }
 
 .open-form-btn:active {
@@ -120,7 +192,7 @@ h2 {
   width: 100%;
   max-width: 550px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow);
 }
 
 .modal-header {
@@ -162,7 +234,7 @@ h2 {
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   color: var(--text-primary);
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .inventory-form input:focus,
@@ -191,7 +263,6 @@ h2 {
   cursor: pointer;
   font-weight: 500;
   margin-top: 1rem;
-  transition: all 0.2s;
 }
 
 .inventory-form button:hover {
@@ -225,12 +296,12 @@ h2 {
   border: 1px solid var(--border-color);
   margin-bottom: 0.75rem;
   border-radius: 0.5rem;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .product-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
 }
 
 .product-details {
@@ -286,7 +357,7 @@ h2 {
   gap: 0.375rem;
   padding: 0.5rem;
   border-radius: 0.375rem;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .edit-btn {
@@ -377,7 +448,7 @@ h2 {
   padding: 0.75rem;
   border-radius: 0.5rem;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .delete-modal-actions .cancel-btn {
@@ -415,7 +486,6 @@ h2 {
   .inventory-container {
     padding: 1rem;
   }
-
   .product-list-header {
     display: none;
   }
