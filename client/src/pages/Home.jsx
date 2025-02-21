@@ -27,7 +27,7 @@ const Home = () => {
             <p>Your trusted partner in electrical solutions and inventory management.</p>
             <div className="hero-buttons">
               <button className="btn-primary" onClick={handleExploreInventory}>
-                Explore Inventory
+                Explore Products
               </button>
               <button className="btn-secondary" onClick={handleContactUs}>
                 Contact Us

@@ -1,65 +1,97 @@
+/* General Styles */
 .footer {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    color: #e0e0e0;
-    padding: 2rem 0;
-    text-align: center;
-  }
-  
+  background: linear-gradient(135deg, #121212 0%, #0a0a0a 100%); /* Darker background */
+  color: #e0e0e0;
+  padding: 40px 20px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-top: 60px; /* Added top margin */
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  text-align: center;
+}
+
+.footer-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.footer-section p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+  color:rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #ff6347; /* Tomato color on hover */
+}
+
+.footer-section a.social-link {
+  margin: 0 10px;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.3s ease;
+}
+
+.footer-section a.social-link:hover {
+  color: #ff6347; /* Tomato color on hover */
+}
+
+.footer-bottom {
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  text-align: center;
+}
+
+.footer-bottom p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .footer-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    max-width: 1200px;
-    margin: 0 auto;
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
-  
-  .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin: 1rem;
-  }
-  
+
   .footer-section h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #fff;
+    font-size: 1.3rem;
   }
-  
-  .footer-section p,
-  .footer-section ul,
-  .footer-section a {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 0.5rem;
+
+  .footer-section p {
+    font-size: 0.9rem;
   }
-  
-  .footer-section ul {
-    list-style: none;
-    padding: 0;
-  }
-  
+
   .footer-section ul li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
   }
-  
-  .footer-section ul li a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .footer-section ul li a:hover {
-    color: #007bff;
-  }
-  
-  .footer-bottom {
-    margin-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 1rem;
-  }
-  
-  .footer-bottom p {
-    margin: 0;
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.8);
-  }
+}
