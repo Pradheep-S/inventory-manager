@@ -1,5 +1,5 @@
 import "./Contact.css";
-
+import Footer from "../components/Footer";
 const Contact = () => {
   return (
     <div className="contact-body">
@@ -77,9 +77,7 @@ const Contact = () => {
         </section>
 
         {/* Footer */}
-        <footer className="footer">
-          <p>&copy; 2025 Mithun Electricals. All rights reserved.</p>
-        </footer>
+        <Footer></Footer>
       </div>
     </div>
   );
