@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Plus, X, Edit2, Trash2, Package, ChevronDown, ChevronUp } from "lucide-react";
+import Navbara from "./Navbara"; // Import the Navbara component
 import "./Inventory.css";
 
 const Inventory = () => {
@@ -144,6 +145,7 @@ const Inventory = () => {
 
   return (
     <div className={`inventory-body ${isModalOpen || isDeleteModalOpen ? 'modal-open' : ''}`}>
+      <Navbara /> {/* Include the Navbara component */}
       <div className="inventory-container">
         <h2>
           <Package className="inline-icon" size={32} />

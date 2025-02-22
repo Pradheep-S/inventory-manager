@@ -33,6 +33,7 @@ body {
 }
 
 .inventory-container {
+  flex:1;
   background: var(--bg-secondary);
   padding: 2rem;
   border-radius: 1rem;
@@ -40,6 +41,7 @@ body {
   width: 100%;
   max-width: 1100px;
   border: 1px solid var(--border-color);
+  margin-left: 30px;
 }
 
 h2 {
