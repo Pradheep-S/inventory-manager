@@ -1,0 +1,76 @@
+/* Navbara Styles */
+:root {
+    --bg-primary: #1a1b1e;
+    --bg-secondary: #23242a;
+    --bg-tertiary: #2a2b32;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1a1;
+    --accent-primary: #7c3aed;
+    --accent-hover: #9061f9;
+    --border-color: #2e2f35;
+    --transition: all 0.2s ease;
+  }
+  
+  .navbara {
+    background-color: var(--bg-secondary);
+    width: 250px;
+    height: 100vh;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+  }
+  
+  .navbara-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  
+  .navbara-brand span {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .navbara-links {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .navbara-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: var(--transition);
+  }
+  
+  .navbara-link:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .navbara-link.active {
+    background-color: var(--accent-primary);
+    color: white;
+  }
+  
+  .navbara-link span {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .navbara-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+  }
