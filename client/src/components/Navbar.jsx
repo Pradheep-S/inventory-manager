@@ -1,38 +1,44 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode"; // Corrected import
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isHidden, setIsHidden] = useState(false); // State for scroll-based hiding
-  const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
+  const [isHidden, setIsHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  // Function to toggle the menu
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token); // Decode the JWT token
+      setUser(decoded);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Scroll event handler
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > lastScrollY) {
-        // Scrolling down
         setIsHidden(true);
       } else {
-        // Scrolling up
         setIsHidden(false);
       }
-
-      // Update the last scroll position
       setLastScrollY(currentScrollY);
     };
-
-    // Attach the scroll event listener
     window.addEventListener("scroll", handleScroll);
-
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -58,6 +64,31 @@ const Navbar = () => {
               Contact Us
             </Link>
           </li>
+          {user ? (
+            <>
+              <li>
+                <Link to="/admin/dashboard" onClick={() => setIsMenuOpen(false)}>
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <button onClick={handleLogout}>Logout</button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                  Signup
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       <div className="hamburger" onClick={toggleMenu}>

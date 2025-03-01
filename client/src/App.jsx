@@ -5,17 +5,44 @@ import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import Products from "./pages/Products";
 import Dashboard from "./admin/Dashboard";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/admin/inventory" element={<Inventory />} />
-        <Route path="/contact" element={<Contact/>} />
-        <Route path="/products" element={<Products/>} />
-        <Route path="/admin/dashboard" element={<Dashboard/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/products" element={<Products />} />
+
+        {/* Protected Routes (Admin Only) */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <PrivateRoute>
+              <AdminRoute>
+                <Dashboard />
+              </AdminRoute>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/inventory"
+          element={
+            <PrivateRoute>
+              <AdminRoute>
+                <Inventory />
+              </AdminRoute>
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );
