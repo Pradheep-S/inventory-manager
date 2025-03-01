@@ -1,24 +1,56 @@
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Corrected import
+import PropTypes from "prop-types";
+import { jwtDecode } from "jwt-decode"; // Fixed: Use named import
 
-// eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const token = localStorage.getItem("token");
 
-  // Redirect to login if no token exists
-  if (!token) return <Navigate to="/login" />;
+  useEffect(() => {
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
 
-  try {
-    // Decode the token
-    const decoded = jwtDecode(token);
+    try {
+      const decoded = jwtDecode(token); // Use the named import
+      const currentTime = Date.now() / 1000;
 
-    // Check if the user has the "admin" role
-    return decoded.role === "admin" ? children : <Navigate to="/" />;
-  } catch (error) {
-    // Handle invalid or expired tokens
-    console.error("Invalid token:", error);
+      if (decoded.exp < currentTime) {
+        console.error("Token has expired");
+        localStorage.removeItem("token");
+        setIsLoading(false);
+        return;
+      }
+
+      setUser(decoded);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      localStorage.removeItem("token");
+      setIsLoading(false);
+    }
+  }, [token]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!token) {
     return <Navigate to="/login" />;
   }
+
+  if (user && user.role === "admin") {
+    return children;
+  } else {
+    return <Navigate to="/" />;
+  }
+};
+
+AdminRoute.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default AdminRoute;

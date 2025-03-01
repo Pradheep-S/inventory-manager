@@ -15,11 +15,12 @@
 }
 
 /* Contact Header */
+/* Contact Header */
 .contact-header {
   text-align: center;
   padding: 80px 20px;
   width: 100%;
-  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9)), url('https://via.placeholder.com/1920x1080') no-repeat center center/cover;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9)); /* Removed the URL */
   position: relative;
   overflow: hidden;
 }

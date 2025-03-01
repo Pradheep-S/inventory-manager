@@ -17,12 +17,19 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/products" element={<Products />} />
 
-        {/* Protected Routes (Admin Only) */}
+        {/* Protected Routes */}
+        <Route
+          path="/products"
+          element={
+            <PrivateRoute>
+              <Products />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/admin/dashboard"
           element={

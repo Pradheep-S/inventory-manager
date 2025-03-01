@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Corrected import
+import { jwtDecode } from "jwt-decode"; // Use named import instead of default
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -13,7 +13,7 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token); // Decode the JWT token
+      const decoded = jwtDecode(token); // Use named import
       setUser(decoded);
     }
   }, []);
@@ -21,7 +21,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
-    navigate("/");
+    navigate("/login");
   };
 
   const toggleMenu = () => {
@@ -68,11 +68,14 @@ const Navbar = () => {
             <>
               <li>
                 <Link to="/admin/dashboard" onClick={() => setIsMenuOpen(false)}>
-                  Dashboard
+                  Admin
                 </Link>
               </li>
               <li>
                 <button onClick={handleLogout}>Logout</button>
+              </li>
+              <li className="profile-icon">
+                <span>{user.username}</span>
               </li>
             </>
           ) : (
