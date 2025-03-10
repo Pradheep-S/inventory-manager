@@ -19,7 +19,7 @@ const Signup = () => {
         password,
       });
       console.log("Registration successful:", response.data);
-      navigate("/login");
+      navigate("/auth");
     } catch (err) {
       setError(err.response?.data?.error || "Failed to register");
     }

@@ -21,7 +21,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
-    navigate("/login");
+    navigate("/auth");
   };
 
   const toggleMenu = () => {
@@ -76,22 +76,14 @@ const Navbar = () => {
             <>
               <li style={{ "--i": 3 }}>
                 <Link
-                  to="/login"
+                  to="/auth"
                   className="auth-link login-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                  Get Started
                 </Link>
               </li>
-              <li style={{ "--i": 4 }}>
-                <Link
-                  to="/signup"
-                  className="auth-link signup-link"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Signup
-                </Link>
-              </li>
+              
             </>
           )}
         </ul>

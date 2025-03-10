@@ -22,7 +22,12 @@ const Auth = () => {
           password,
         });
         console.log("Registration successful:", response.data);
-        navigate("/auth");
+        // Instead of navigating, switch to login form
+        setIsSignup(false); // Switch to login mode
+        setUsername(""); // Clear username
+        setEmail(""); // Clear email
+        setPassword(""); // Clear password
+        setError(""); // Clear any errors
       } else {
         const endpoint = isAdminLogin
           ? "http://localhost:5000/api/auth/admin-login"
@@ -54,11 +59,11 @@ const Auth = () => {
   };
 
   return (
-    <div className="auth-body">
-    <div className="auth-wrapper">
-      <div className="auth-container">
-        <div className={`auth-left ${isSignup ? "slide-right" : "slide-left"}`}>
+    <div className="auth-wrapper auth-body">
+      <div className={`auth-container ${isSignup ? "signup" : ""}`}>
+        <div className="auth-left">
           <h1 className="auth-brand-title">Welcome</h1>
+          <h2 className="auth-company-name">Mithun Electricals</h2>
           <p className="auth-brand-text">
             {isSignup ? "Already have an account?" : "Need an account?"}{" "}
             <span className="auth-toggle-link" onClick={toggleForm}>
@@ -67,7 +72,7 @@ const Auth = () => {
           </p>
         </div>
 
-        <div className={`auth-right ${isSignup ? "slide-left" : "slide-right"}`}>
+        <div className="auth-right">
           <form onSubmit={handleSubmit} className="auth-form">
             <h2 className="auth-title">{isSignup ? "Sign Up" : "Login"}</h2>
             {error && <p className="auth-error">{error}</p>}
@@ -128,7 +133,6 @@ const Auth = () => {
           </form>
         </div>
       </div>
-    </div>
     </div>
   );
 };
