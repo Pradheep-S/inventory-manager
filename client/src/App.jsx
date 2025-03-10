@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
+import Auth from "./pages/Auth";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             </PrivateRoute>
           }
         />
+      <Route path="/auth" element={<Auth />} />  
       </Routes>
     </Router>
   );

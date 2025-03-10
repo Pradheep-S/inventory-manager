@@ -39,13 +39,13 @@ const AdminRoute = ({ children }) => {
   }
 
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/auth" />;
   }
 
   if (user && user.role === "admin") {
     return children;
   } else {
-    return <Navigate to="/login" />;
+    return <Navigate to="/auth" />;
   }
 };
 
