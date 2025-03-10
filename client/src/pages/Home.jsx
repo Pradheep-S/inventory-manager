@@ -6,7 +6,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleExploreInventory = () => {
-    navigate("/inventory"); // Navigate to the inventory page
+    navigate("/products"); // Navigate to the inventory page
   };
 
   const handleContactUs = () => {
