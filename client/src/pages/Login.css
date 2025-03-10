@@ -45,6 +45,12 @@
   gap: 8px;
 }
 
+.login-checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
 .login-label {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
@@ -98,13 +104,40 @@
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .login-signup-link:hover {
-  text-decoration: underline;
+  background: rgba(0, 102, 255, 0.1);
+  text-decoration: none;
 }
 
-/* Add animated shape background elements to match the home theme */
+/* Navigation Enhancement */
+.login-nav-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.login-nav-link {
+  color: #0066ff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.login-nav-link.active {
+  background: rgba(0, 102, 255, 0.2);
+}
+
+.login-nav-link:hover {
+  background: rgba(0, 102, 255, 0.1);
+}
+
+/* Animated background elements */
 .login-container::before {
   content: '';
   position: absolute;
@@ -132,18 +165,10 @@
 }
 
 @keyframes float-rotate-scale {
-  0%, 100% {
-    transform: translateY(0) rotate(0) scale(1);
-  }
-  25% {
-    transform: translateY(-20px) rotate(45deg) scale(1.1);
-  }
-  50% {
-    transform: translateY(0) rotate(90deg) scale(1);
-  }
-  75% {
-    transform: translateY(20px) rotate(135deg) scale(0.9);
-  }
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  25% { transform: translateY(-20px) rotate(45deg) scale(1.1); }
+  50% { transform: translateY(0) rotate(90deg) scale(1); }
+  75% { transform: translateY(20px) rotate(135deg) scale(0.9); }
 }
 
 /* Responsive styling */

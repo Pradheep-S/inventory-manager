@@ -45,7 +45,7 @@ const AdminRoute = ({ children }) => {
   if (user && user.role === "admin") {
     return children;
   } else {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 };
 

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Use named import instead of default
+import { jwtDecode } from "jwt-decode";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -13,7 +13,7 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token); // Use named import
+      const decoded = jwtDecode(token);
       setUser(decoded);
     }
   }, []);
@@ -49,44 +49,46 @@ const Navbar = () => {
       <div className="logo">Mithun Electricals</div>
       <div className={`nav-links ${isMenuOpen ? "active" : ""}`}>
         <ul>
-          <li>
-            <Link to="/" onClick={() => setIsMenuOpen(false)}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/products" onClick={() => setIsMenuOpen(false)}>
-              Products
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-              Contact Us
-            </Link>
-          </li>
+          {[
+            { to: "/", text: "Home" },
+            { to: "/products", text: "Products" },
+            { to: "/contact", text: "Contact Us" },
+            ...(user ? [{ to: "/admin/dashboard", text: "Admin" }] : []),
+          ].map((item, index) => (
+            <li key={index} style={{ "--i": index }}>
+              <Link to={item.to} onClick={() => setIsMenuOpen(false)}>
+                {item.text}
+              </Link>
+            </li>
+          ))}
           {user ? (
             <>
-              <li>
-                <Link to="/admin/dashboard" onClick={() => setIsMenuOpen(false)}>
-                  Admin
-                </Link>
+              <li style={{ "--i": 4 }}>
+                <button className="logout-btn" onClick={handleLogout}>
+                  Logout
+                </button>
               </li>
-              <li>
-                <button onClick={handleLogout}>Logout</button>
-              </li>
-              <li className="profile-icon">
+              <li className="profile-icon" style={{ "--i": 5 }}>
                 <span>{user.username}</span>
               </li>
             </>
           ) : (
             <>
-              <li>
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+              <li style={{ "--i": 3 }}>
+                <Link
+                  to="/login"
+                  className="auth-link login-link"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Login
                 </Link>
               </li>
-              <li>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+              <li style={{ "--i": 4 }}>
+                <Link
+                  to="/signup"
+                  className="auth-link signup-link"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Signup
                 </Link>
               </li>
