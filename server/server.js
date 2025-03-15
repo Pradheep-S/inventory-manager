@@ -222,12 +222,12 @@ app.get("/api/inventory/recent-activities", async (req, res) => {
 // Initialize Default Admin (Run once)
 const initializeDefaultAdmin = async () => {
   try {
-    const adminExists = await Admin.findOne({ username: "admin" });
+    const adminExists = await Admin.findOne({ username: "admin2" });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash("root", 10);
+      const hashedPassword = await bcrypt.hash("mithun", 10);
       const defaultAdmin = new Admin({
-        username: "admin",
-        email: "admin@example.com",
+        username: "admin2",
+        email: "admin@gmail.com",
         password: hashedPassword,
         role: "admin",
       });

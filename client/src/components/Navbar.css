@@ -3,9 +3,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Original padding maintained */
-  background: rgba(30, 41, 59, 0.1); /* Transparent background */
-  backdrop-filter: blur(8px); /* Slight blur for glass effect */
+  padding: 10px 20px;
+  background: rgba(30, 41, 59, 0.1);
+  backdrop-filter: blur(8px);
   color: white;
   position: sticky;
   top: 0;
@@ -22,6 +22,7 @@
 .logo {
   font-size: 1.5em;
   font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: linear-gradient(90deg, #ff6347, #ff6347);
   -webkit-background-clip: text;
   background-clip: text;
@@ -109,20 +110,6 @@
   color: #ff6347;
 }
 
-.signup-link {
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.signup-link:hover {
-  border-color: #ffffff;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  animation: pulse 0.6s infinite alternate;
-  color: #ff6347;
-}
-
 /* Logout Button */
 .logout-btn {
   background: linear-gradient(90deg, #f87171, #ef4444);
@@ -162,20 +149,60 @@
 
 /* Profile Icon */
 .profile-icon {
-  padding: 6px 12px;
+  padding: 6px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border-radius: 50%;
   transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.profile-icon span {
+.profile-icon-img {
+  color: #f9efed;
+  font-size: 28px; /* Increased size for visibility */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.profile-icon:hover .profile-icon-img {
+  transform: scale(1.1);
   color: #ff6347;
-  font-weight: 600;
 }
 
 .profile-icon:hover {
   background: rgba(96, 165, 250, 0.1);
-  transform: scale(1.05);
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  min-width: 200px;
+  z-index: 1001; /* Higher z-index to ensure visibility */
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.profile-details {
+  color: white;
+}
+
+.profile-details h3 {
+  margin: 0 0 10px;
+  font-size: 1.2em;
+  color:#ff6347;
+}
+
+.profile-details p {
+  margin: 5px 0;
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Hamburger Menu */
@@ -211,8 +238,8 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .navbar {
-    padding: 10px 20px; /* Original padding maintained */
-    background: rgba(30, 41, 59, 0.1); /* Transparent background */
+    padding: 10px 20px;
+    background: rgba(30, 41, 59, 0.1);
     backdrop-filter: blur(8px);
   }
 
@@ -225,7 +252,7 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background: rgba(30, 41, 59, 0.9); /* Slightly less transparent for mobile */
+    background: rgba(30, 41, 59, 0.9);
     backdrop-filter: blur(10px);
     flex-direction: column;
     align-items: center;
@@ -236,7 +263,7 @@
   }
 
   .nav-links.active {
-    height: 280px;
+    height: 320px;
     opacity: 1;
   }
 
@@ -263,9 +290,20 @@
   }
 
   .profile-icon {
-    width: 60%;
+    width: auto;
     margin: 10px auto;
-    padding: 8px 15px;
+    padding: 8px;
+  }
+
+  .profile-icon-img {
+    font-size: 32px; /* Larger icon for mobile */
+  }
+
+  .profile-dropdown {
+    position: static;
+    width: 80%;
+    margin: 10px auto;
+    background: rgba(40, 51, 69, 0.95);
   }
 
   .nav-links.active li {
@@ -274,7 +312,7 @@
   }
 }
 
-/* Slide-in Animation */
+/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -286,12 +324,22 @@
   }
 }
 
-/* Pulse Animation for Login/Signup */
 @keyframes pulse {
   from {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   }
   to {
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
