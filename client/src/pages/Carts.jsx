@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "./CartContext.jsx"; // Import useCart from CartContext
 import "./Carts.css";
-import Footer from "../components/Footer";
+import Footer from "../components/Footer.jsx";
 
 const Carts = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -10,6 +11,7 @@ const Carts = () => {
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState(null); // Single notification state
   const navigate = useNavigate();
+  const { updateCartCount } = useCart(); // Get updateCartCount from context
 
   useEffect(() => {
     fetchCart();
@@ -50,11 +52,25 @@ const Carts = () => {
       const itemToRemove = cartItems.find((item) => item.productId._id === productId);
       const itemName = itemToRemove ? itemToRemove.productId.name : "Item";
 
+      // Remove item from cart
       await axios.delete(`http://localhost:5000/api/cart/remove/${productId}`, {
         headers: { "x-access-token": token },
       });
-      setCartItems(cartItems.filter((item) => item.productId._id !== productId));
-      setNotification(`${itemName} removed`); // Set single notification
+
+      // Update local cart state
+      const updatedItems = cartItems.filter((item) => item.productId._id !== productId);
+      setCartItems(updatedItems);
+
+      // Fetch updated cart count
+      const res = await axios.get("http://localhost:5000/api/cart", {
+        headers: { "x-access-token": token },
+      });
+      const items = res.data.items || [];
+      const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
+      updateCartCount(totalCount); // Update the count dynamically
+
+      // Show notification
+      setNotification(`${itemName} removed`);
       setTimeout(() => {
         setNotification(null);
       }, 3000);

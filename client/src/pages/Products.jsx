@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "./CartContext.jsx"; // Import useCart from CartContext
 import "./Products.css";
 import Footer from "../components/Footer";
 
@@ -12,6 +13,7 @@ const Products = () => {
   const [sortOption, setSortOption] = useState("name");
   const [notifications, setNotifications] = useState({}); // Object to track notifications per product
   const navigate = useNavigate();
+  const { updateCartCount } = useCart(); // Get updateCartCount from context
 
   useEffect(() => {
     fetchProducts();
@@ -54,11 +56,22 @@ const Products = () => {
     }
 
     try {
+      // Add product to cart
       await axios.post(
         "http://localhost:5000/api/cart/add",
         { productId, quantity: 1 },
         { headers: { "x-access-token": token } }
       );
+
+      // Fetch updated cart count
+      const res = await axios.get("http://localhost:5000/api/cart", {
+        headers: { "x-access-token": token },
+      });
+      const items = res.data.items || [];
+      const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
+      updateCartCount(totalCount); // Update the cart count dynamically
+
+      // Show notification
       setNotifications((prev) => ({
         ...prev,
         [productId]: "Product added to cart!",

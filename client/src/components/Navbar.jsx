@@ -1,64 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
-import axios from "axios"; // Added axios for API calls
+import { useCart } from "../pages/CartContext.jsx"; // Import the custom hook
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [user, setUser] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0); // New state for cart item count
   const navigate = useNavigate();
   const profileRef = useRef(null);
-
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user");
-      }
-    }
-  }, []);
-
-  // Fetch cart count when user is logged in
-  useEffect(() => {
-    const fetchCartCount = async () => {
-      const token = localStorage.getItem("token");
-      if (!token || !user || user.role === "admin") {
-        setCartCount(0); // Reset count if no user or user is admin
-        return;
-      }
-
-      try {
-        const res = await axios.get("http://localhost:5000/api/cart", {
-          headers: { "x-access-token": token },
-        });
-        const items = res.data.items || [];
-        const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
-        setCartCount(totalCount);
-      } catch (error) {
-        console.error("Error fetching cart count:", error);
-        setCartCount(0); // Reset on error
-      }
-    };
-
-    fetchCartCount();
-  }, [user]); // Re-fetch when user changes (login/logout)
+  const { cartCount, user } = useCart(); // Use cartCount and user from context
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token"); // Remove token as well
-    setUser(null);
-    setCartCount(0); // Reset cart count on logout
-    setIsProfileOpen(false);
+    localStorage.removeItem("token");
     navigate("/auth");
+    setIsProfileOpen(false);
   };
 
   const toggleMenu = () => {
@@ -117,7 +76,7 @@ const Navbar = () => {
             ...(user && user.role === "admin"
               ? [{ to: "/admin/dashboard", text: "Admin" }]
               : user
-              ? [{ to: "/cart", text: `Cart(${cartCount})` }] // Updated Cart link with count
+              ? [{ to: "/cart", text: `Cart(${cartCount})` }]
               : []),
           ].map((item, index) => (
             <li key={index} style={{ "--i": index }}>

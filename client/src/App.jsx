@@ -11,58 +11,61 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import Auth from "./pages/Auth";
 import Carts from "./pages/Carts"; // Import the new Carts component
+import { CartProvider } from "./pages/CartContext.jsx"; // Updated path
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/auth" element={<Auth />} />
+    <CartProvider> {/* Wrap the app with CartProvider */}
+      <Router>
+        <Navbar />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/auth" element={<Auth />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/products"
-          element={
-            <PrivateRoute>
-              <Products />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <PrivateRoute>
-              <Carts />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <PrivateRoute>
-              <AdminRoute>
-                <Dashboard />
-              </AdminRoute>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/inventory"
-          element={
-            <PrivateRoute>
-              <AdminRoute>
-                <Inventory />
-              </AdminRoute>
-            </PrivateRoute>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* Protected Routes */}
+          <Route
+            path="/products"
+            element={
+              <PrivateRoute>
+                <Products />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute>
+                <Carts />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <PrivateRoute>
+                <AdminRoute>
+                  <Dashboard />
+                </AdminRoute>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/inventory"
+            element={
+              <PrivateRoute>
+                <AdminRoute>
+                  <Inventory />
+                </AdminRoute>
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </CartProvider>
   );
 }
 
