@@ -1,38 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react"; // Added useRef
-import { FaUserCircle } from "react-icons/fa";
+import { useState, useEffect, useRef } from "react";
+import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
+import { useCart } from "../pages/CartContext.jsx"; // Import the custom hook
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [user, setUser] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
-  const profileRef = useRef(null); // Ref to track the profile dropdown
-
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        console.log("Parsed User Data:", parsedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user");
-      }
-    } else {
-      console.log("No user data found in localStorage");
-    }
-  }, []);
+  const profileRef = useRef(null);
+  const { cartCount, user } = useCart(); // Use cartCount and user from context
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser(null);
+    localStorage.removeItem("token");
+    navigate("/auth"); // Navigate to the auth page
+    window.location.reload(); // Force a full page reload
     setIsProfileOpen(false);
-    navigate("/auth");
   };
 
   const toggleMenu = () => {
@@ -43,7 +29,6 @@ const Navbar = () => {
     setIsProfileOpen((prev) => !prev);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -54,7 +39,6 @@ const Navbar = () => {
         setIsProfileOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -90,11 +74,21 @@ const Navbar = () => {
             { to: "/", text: "Home" },
             { to: "/products", text: "Products" },
             { to: "/contact", text: "Contact Us" },
-            ...(user ? [{ to: "/admin/dashboard", text: "Admin" }] : []),
+            ...(user && user.role === "admin"
+              ? [{ to: "/admin/dashboard", text: "Admin" }]
+              : user
+              ? [{ to: "/cart", text: `Cart(${cartCount})` }]
+              : []),
           ].map((item, index) => (
             <li key={index} style={{ "--i": index }}>
               <Link to={item.to} onClick={() => setIsMenuOpen(false)}>
-                {item.text}
+                {item.text.startsWith("Cart") ? (
+                  <span>
+                    <FaShoppingCart /> {item.text}
+                  </span>
+                ) : (
+                  item.text
+                )}
               </Link>
             </li>
           ))}
