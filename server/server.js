@@ -168,6 +168,34 @@ app.get("/api/inventory", async (req, res) => {
   }
 });
 
+// Get Low Stock Products (Public)
+app.get("/api/inventory/low-stock", async (req, res) => {
+  try {
+    const lowStockProducts = await Product.find({ quantity: { $lte: 10 } }); // Assuming low stock is ≤ 10
+    res.json(lowStockProducts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get Recent Activities (Public)
+app.get("/api/inventory/recent-activities", async (req, res) => {
+  try {
+    const recentActivities = await Product.find()
+      .sort({ timestamp: -1 }) // Sort by timestamp descending (most recent first)
+      .limit(10) // Limit to 10 recent activities
+      .select("name timestamp"); // Select only name and timestamp for simplicity
+    const activities = recentActivities.map((product) => ({
+      _id: product._id,
+      description: `Product "${product.name}" updated/added`,
+      timestamp: product.timestamp,
+    }));
+    res.json(activities);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Update Product (Admin Only)
 app.put("/api/inventory/update/:id", verifyToken, isAdmin, async (req, res) => {
   try {
