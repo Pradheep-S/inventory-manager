@@ -15,17 +15,17 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error(err));
 
-// Define User Schema and Model (for regular users)
+// User Schema (Regular Users)
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ["user"], default: "user" }, // Restrict to "user" only
+  role: { type: String, enum: ["user"], default: "user" },
 });
 
 const User = mongoose.model("User", UserSchema);
 
-// Define Admin Schema and Model (separate collection)
+// Admin Schema
 const AdminSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
@@ -35,7 +35,7 @@ const AdminSchema = new mongoose.Schema({
 
 const Admin = mongoose.model("Admin", AdminSchema);
 
-// Define Product Schema and Model
+// Product Schema
 const ProductSchema = new mongoose.Schema({
   name: String,
   description: String,
@@ -46,6 +46,20 @@ const ProductSchema = new mongoose.Schema({
 });
 
 const Product = mongoose.model("Product", ProductSchema);
+
+// Cart Schema
+const CartSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  items: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+      quantity: { type: Number, required: true, default: 1 },
+    },
+  ],
+  updatedAt: { type: Date, default: Date.now },
+});
+
+const Cart = mongoose.model("Cart", CartSchema);
 
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
@@ -69,24 +83,20 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-// Register User (for regular users)
+// Register User
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
     if (!username || !email || !password) {
       return res.status(400).json({ error: "Username, email, and password are required" });
     }
-
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
       return res.status(400).json({ error: "Email or username already exists" });
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
-
     res.status(201).json(newUser);
   } catch (err) {
     console.error("Registration error:", err);
@@ -94,24 +104,20 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
-// Login User (for regular users)
+// Login User
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
-
     const user = await User.findOne({ email });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
-
     const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
     res.json({ token, user: { id: user._id, username: user.username, role: user.role } });
   } catch (err) {
     console.error("Login error:", err);
@@ -123,20 +129,16 @@ app.post("/api/auth/login", async (req, res) => {
 app.post("/api/auth/admin-login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
-
     const admin = await Admin.findOne({ email });
     if (!admin || !(await bcrypt.compare(password, admin.password))) {
       return res.status(400).json({ error: "Invalid admin credentials" });
     }
-
     const token = jwt.sign({ userId: admin._id, role: admin.role }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
     res.json({ token, user: { id: admin._id, username: admin.username, role: admin.role } });
   } catch (err) {
     console.error("Admin login error:", err);
@@ -148,14 +150,7 @@ app.post("/api/auth/admin-login", async (req, res) => {
 app.post("/api/inventory/add", verifyToken, isAdmin, async (req, res) => {
   try {
     const { name, description, quantity, price, supplier } = req.body;
-    const newProduct = new Product({
-      name,
-      description,
-      quantity,
-      price,
-      supplier,
-      timestamp: new Date(),
-    });
+    const newProduct = new Product({ name, description, quantity, price, supplier });
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (err) {
@@ -197,29 +192,71 @@ app.delete("/api/inventory/delete/:id", verifyToken, isAdmin, async (req, res) =
   }
 });
 
-// Get Low Stock Products (Public)
-app.get("/api/inventory/low-stock", async (req, res) => {
+// Add to Cart (User Only)
+app.post("/api/cart/add", verifyToken, async (req, res) => {
   try {
-    const lowStockProducts = await Product.find({ quantity: { $lt: 10 } });
-    res.json(lowStockProducts);
+    const { productId, quantity } = req.body;
+    const userId = req.user.userId;
+
+    if (req.user.role === "admin") {
+      return res.status(403).json({ error: "Admins cannot add items to cart" });
+    }
+
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      cart = new Cart({ userId, items: [] });
+    }
+
+    const itemIndex = cart.items.findIndex((item) => item.productId.toString() === productId);
+    if (itemIndex > -1) {
+      cart.items[itemIndex].quantity += quantity || 1;
+    } else {
+      cart.items.push({ productId, quantity: quantity || 1 });
+    }
+
+    cart.updatedAt = new Date();
+    await cart.save();
+    res.status(200).json(cart);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Get Recent Activities (Public)
-app.get("/api/inventory/recent-activities", async (req, res) => {
+// Get Cart (User Only)
+app.get("/api/cart", verifyToken, async (req, res) => {
   try {
-    const recentActivities = await Product.find()
-      .sort({ timestamp: -1 })
-      .limit(5);
-    res.json(recentActivities);
+    const userId = req.user.userId;
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    if (!cart) {
+      return res.status(200).json({ items: [] });
+    }
+    res.json(cart);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Initialize Default Admin (Run once)
+// Remove from Cart (User Only)
+app.delete("/api/cart/remove/:productId", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { productId } = req.params;
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
+    cart.updatedAt = new Date();
+    await cart.save();
+    res.json(cart);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Initialize Default Admin
 const initializeDefaultAdmin = async () => {
   try {
     const adminExists = await Admin.findOne({ username: "admin2" });
@@ -232,7 +269,7 @@ const initializeDefaultAdmin = async () => {
         role: "admin",
       });
       await defaultAdmin.save();
-      console.log("Default admin created: admin/root");
+      console.log("Default admin created: admin2/mithun");
     } else {
       console.log("Default admin already exists");
     }
@@ -241,7 +278,6 @@ const initializeDefaultAdmin = async () => {
   }
 };
 
-// Call this function when the server starts
 mongoose.connection.once("open", () => {
   initializeDefaultAdmin();
 });

@@ -10,6 +10,7 @@ import Signup from "./pages/Signup";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import Auth from "./pages/Auth";
+import Carts from "./pages/Carts"; // Import the new Carts component
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/auth" element={<Auth />} />
 
         {/* Protected Routes */}
         <Route
@@ -28,6 +30,14 @@ function App() {
           element={
             <PrivateRoute>
               <Products />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <PrivateRoute>
+              <Carts />
             </PrivateRoute>
           }
         />
@@ -51,7 +61,6 @@ function App() {
             </PrivateRoute>
           }
         />
-      <Route path="/auth" element={<Auth />} />  
       </Routes>
     </Router>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./Products.css";
 import Footer from "../components/Footer";
 
@@ -9,6 +10,8 @@ const Products = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("name");
+  const [notifications, setNotifications] = useState({}); // Object to track notifications per product
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -41,6 +44,48 @@ const Products = () => {
 
   const handleSort = (e) => {
     setSortOption(e.target.value);
+  };
+
+  const handleAddToCart = async (productId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:5000/api/cart/add",
+        { productId, quantity: 1 },
+        { headers: { "x-access-token": token } }
+      );
+      setNotifications((prev) => ({
+        ...prev,
+        [productId]: "Product added to cart!",
+      }));
+      setTimeout(() => {
+        setNotifications((prev) => ({
+          ...prev,
+          [productId]: null,
+        }));
+      }, 3000); // Auto-dismiss after 3 seconds
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      setError("Failed to add product to cart. Please try again.");
+    }
+  };
+
+  const handleBuyNow = (productId) => {
+    setNotifications((prev) => ({
+      ...prev,
+      [productId]: `Proceeding to buy product ${productId}`,
+    }));
+    setTimeout(() => {
+      setNotifications((prev) => ({
+        ...prev,
+        [productId]: null,
+      }));
+    }, 3000); // Auto-dismiss after 3 seconds
   };
 
   const filteredProducts = products
@@ -101,6 +146,35 @@ const Products = () => {
               <p className="product-supplier">Supplier: {product.supplier}</p>
               {product.description && (
                 <p className="product-description">{product.description}</p>
+              )}
+              <div className="product-actions">
+                <button
+                  className="add-to-cart-btn"
+                  onClick={() => handleAddToCart(product._id)}
+                >
+                  Add to Cart
+                </button>
+                <button
+                  className="buy-now-btn"
+                  onClick={() => handleBuyNow(product._id)}
+                >
+                  Buy Now
+                </button>
+              </div>
+              {notifications[product._id] && (
+                <div className="product-notification">
+                  {notifications[product._id]}
+                  <button
+                    onClick={() =>
+                      setNotifications((prev) => ({
+                        ...prev,
+                        [product._id]: null,
+                      }))
+                    }
+                  >
+                    ×
+                  </button>
+                </div>
               )}
             </div>
           ))

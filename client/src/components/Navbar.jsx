@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react"; // Added useRef
-import { FaUserCircle } from "react-icons/fa";
+import { useState, useEffect, useRef } from "react";
+import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
+import axios from "axios"; // Added axios for API calls
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -9,28 +10,53 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [user, setUser] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0); // New state for cart item count
   const navigate = useNavigate();
-  const profileRef = useRef(null); // Ref to track the profile dropdown
+  const profileRef = useRef(null);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
       try {
         const parsedUser = JSON.parse(userData);
-        console.log("Parsed User Data:", parsedUser);
         setUser(parsedUser);
       } catch (error) {
         console.error("Error parsing user data:", error);
         localStorage.removeItem("user");
       }
-    } else {
-      console.log("No user data found in localStorage");
     }
   }, []);
 
+  // Fetch cart count when user is logged in
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      const token = localStorage.getItem("token");
+      if (!token || !user || user.role === "admin") {
+        setCartCount(0); // Reset count if no user or user is admin
+        return;
+      }
+
+      try {
+        const res = await axios.get("http://localhost:5000/api/cart", {
+          headers: { "x-access-token": token },
+        });
+        const items = res.data.items || [];
+        const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
+        setCartCount(totalCount);
+      } catch (error) {
+        console.error("Error fetching cart count:", error);
+        setCartCount(0); // Reset on error
+      }
+    };
+
+    fetchCartCount();
+  }, [user]); // Re-fetch when user changes (login/logout)
+
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token"); // Remove token as well
     setUser(null);
+    setCartCount(0); // Reset cart count on logout
     setIsProfileOpen(false);
     navigate("/auth");
   };
@@ -43,7 +69,6 @@ const Navbar = () => {
     setIsProfileOpen((prev) => !prev);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -54,7 +79,6 @@ const Navbar = () => {
         setIsProfileOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -90,11 +114,21 @@ const Navbar = () => {
             { to: "/", text: "Home" },
             { to: "/products", text: "Products" },
             { to: "/contact", text: "Contact Us" },
-            ...(user ? [{ to: "/admin/dashboard", text: "Admin" }] : []),
+            ...(user && user.role === "admin"
+              ? [{ to: "/admin/dashboard", text: "Admin" }]
+              : user
+              ? [{ to: "/cart", text: `Cart(${cartCount})` }] // Updated Cart link with count
+              : []),
           ].map((item, index) => (
             <li key={index} style={{ "--i": index }}>
               <Link to={item.to} onClick={() => setIsMenuOpen(false)}>
-                {item.text}
+                {item.text.startsWith("Cart") ? (
+                  <span>
+                    <FaShoppingCart /> {item.text}
+                  </span>
+                ) : (
+                  item.text
+                )}
               </Link>
             </li>
           ))}
