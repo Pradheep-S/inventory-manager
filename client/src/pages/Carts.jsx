@@ -112,7 +112,7 @@ const Carts = () => {
       // In a real app, you would create an order on your backend
       // For demo purposes, we'll simulate this client-side
       const amount = Math.round(calculateTotal() * 100); // Convert to paise
-      const receipt = `order_${Date.now()}`;
+      // const receipt = `order_${Date.now()}`;
 
       // Razorpay options - using test mode directly
       const options = {
