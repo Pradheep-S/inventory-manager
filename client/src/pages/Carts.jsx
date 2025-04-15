@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "./CartContext.jsx";
+import { useCart } from "./CartContext";
 import "./Carts.css";
-import Footer from "../components/Footer.jsx";
+import Footer from "../components/Footer";
+import axios from "axios";
 
 const Carts = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -14,7 +14,6 @@ const Carts = () => {
   const navigate = useNavigate();
   const { updateCartCount } = useCart();
 
-  // Razorpay configuration
   const RAZORPAY_KEY_ID = "rzp_test_qrB3kyGhLYMsvr";
   const RAZORPAY_THEME_COLOR = "#3399cc";
 
@@ -36,7 +35,6 @@ const Carts = () => {
     });
   };
 
-  // Mock cart data - in a real app, you would fetch this from your backend
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -44,33 +42,21 @@ const Carts = () => {
       return;
     }
 
-    setLoading(true);
-    // Simulate loading cart items
-    const timer = setTimeout(() => {
-      // Mock cart items data
-      const mockCartItems = [
-        {
-          productId: {
-            _id: "1",
-            name: "Sample Product 1",
-            price: 499,
-          },
-          quantity: 2
-        },
-        {
-          productId: {
-            _id: "2",
-            name: "Sample Product 2",
-            price: 1299,
-          },
-          quantity: 1
-        }
-      ];
-      setCartItems(mockCartItems);
-      setLoading(false);
-    }, 1000);
+    const fetchCartItems = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:5000/api/cart", {
+          headers: { "x-access-token": token },
+        });
+        setCartItems(response.data.items || []);
+      } catch (err) {
+        setError("Failed to load cart items. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    fetchCartItems();
   }, [navigate]);
 
   const formatPrice = (price) => {
@@ -80,13 +66,36 @@ const Carts = () => {
     }).format(price);
   };
 
-  const handleRemoveFromCart = (productId) => {
-    const updatedItems = cartItems.filter((item) => item.productId._id !== productId);
-    setCartItems(updatedItems);
-    const itemName = cartItems.find(item => item.productId._id === productId)?.productId.name || "Item";
-    setNotification(`${itemName} removed`);
-    setTimeout(() => setNotification(null), 3000);
-    updateCartCount(updatedItems.reduce((acc, item) => acc + item.quantity, 0));
+  const handleRemoveFromCart = async (productId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/cart/remove/${productId}`, {
+        headers: { "x-access-token": token },
+      });
+
+      // Update local state
+      const updatedItems = cartItems.filter(
+        (item) => item.productId._id !== productId
+      );
+      setCartItems(updatedItems);
+      
+      // Update cart count in context
+      const count = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+      updateCartCount(count);
+
+      const itemName = cartItems.find(
+        (item) => item.productId._id === productId
+      )?.productId.name || "Item";
+      setNotification(`${itemName} removed`);
+      setTimeout(() => setNotification(null), 3000);
+    } catch (err) {
+      setError("Failed to remove item from cart. Please try again.");
+    }
   };
 
   const calculateTotal = () => {
@@ -110,21 +119,16 @@ const Carts = () => {
         throw new Error("Razorpay SDK failed to load. Are you online?");
       }
 
-      // In a real app, you would create an order on your backend
-      // For demo purposes, we'll simulate this client-side
-      const amount = Math.round(calculateTotal() * 100); // Convert to paise
-      // const receipt = `order_${Date.now()}`;
+      const amount = Math.round(calculateTotal() * 100);
 
-      // Razorpay options - using test mode directly
       const options = {
         key: RAZORPAY_KEY_ID,
         amount: amount,
         currency: "INR",
         name: "Mithun Electricals",
         description: "Test Payment",
-        order_id: undefined, // Not using actual orders in this demo
+        order_id: undefined,
         handler: function (response) {
-          // In a real app, you would verify the payment on your backend
           setNotification("Payment successful! This is a demo transaction.");
           setCartItems([]);
           updateCartCount(0);
@@ -132,7 +136,7 @@ const Carts = () => {
         prefill: {
           name: "Test User",
           email: "test.user@example.com",
-          contact: "9876543210",
+          contact: "7604940591",
         },
         notes: {
           address: "Test Address",
@@ -210,9 +214,6 @@ const Carts = () => {
           >
             {processingPayment ? "Processing..." : "Proceed to Checkout"}
           </button>
-          <div className="test-mode-info">
-            
-          </div>
         </div>
       )}
 

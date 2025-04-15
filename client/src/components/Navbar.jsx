@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
-import { useCart } from "../pages/CartContext.jsx"; // Import the custom hook
+import { useCart } from "../pages/CartContext";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -11,13 +11,13 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
   const profileRef = useRef(null);
-  const { cartCount, user } = useCart(); // Use cartCount and user from context
+  const { cartCount, user } = useCart();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    navigate("/auth"); // Navigate to the auth page
-    window.location.reload(); // Force a full page reload
+    navigate("/auth");
+    window.location.reload();
     setIsProfileOpen(false);
   };
 
@@ -77,7 +77,7 @@ const Navbar = () => {
             ...(user && user.role === "admin"
               ? [{ to: "/admin/dashboard", text: "Admin" }]
               : user
-              ? [{ to: "/cart", text: `Cart(${cartCount})` }]
+              ? [{ to: "/cart", text: `Cart (${cartCount})` }]
               : []),
           ].map((item, index) => (
             <li key={index} style={{ "--i": index }}>

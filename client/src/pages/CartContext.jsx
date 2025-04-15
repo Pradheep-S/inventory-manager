@@ -46,8 +46,16 @@ export const CartProvider = ({ children }) => {
     setCartCount(newCount);
   };
 
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+    fetchCartCount(userData);
+  };
+
   return (
-    <CartContext.Provider value={{ cartCount, updateCartCount, user }}>
+    <CartContext.Provider 
+      value={{ cartCount, updateCartCount, user, updateUser, fetchCartCount }}
+    >
       {children}
     </CartContext.Provider>
   );
