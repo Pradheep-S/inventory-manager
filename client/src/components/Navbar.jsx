@@ -111,6 +111,9 @@ const Navbar = () => {
                       <p>Username: {getUsername()}</p>
                       {user.email && <p>Email: {user.email}</p>}
                       {user.role && <p>Role: {user.role}</p>}
+                      <Link to="/profile" className="profile-link" onClick={() => setIsProfileOpen(false)}>
+                        Manage Profile
+                      </Link>
                     </div>
                   </div>
                 )}

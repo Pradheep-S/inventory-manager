@@ -160,7 +160,7 @@
 
 .profile-icon-img {
   color: #f9efed;
-  font-size: 28px; /* Increased size for visibility */
+  font-size: 28px;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -184,8 +184,8 @@
   border-radius: 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   padding: 15px;
-  min-width: 200px;
-  z-index: 1001; /* Higher z-index to ensure visibility */
+  min-width: 220px;
+  z-index: 1001;
   animation: fadeIn 0.2s ease-in-out;
 }
 
@@ -196,13 +196,34 @@
 .profile-details h3 {
   margin: 0 0 10px;
   font-size: 1.2em;
-  color:#ff6347;
+  color: #ff6347;
 }
 
 .profile-details p {
   margin: 5px 0;
   font-size: 0.9em;
   color: rgba(255, 255, 255, 0.9);
+}
+
+/* Profile Link */
+.profile-link {
+  display: block;
+  padding: 8px 16px;
+  margin-top: 12px;
+  background: linear-gradient(90deg, #ff6347, #ff6347);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.profile-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 99, 71, 0.3);
+  background: linear-gradient(90deg, #ff7357, #ff7357);
 }
 
 /* Hamburger Menu */
@@ -296,7 +317,7 @@
   }
 
   .profile-icon-img {
-    font-size: 32px; /* Larger icon for mobile */
+    font-size: 32px;
   }
 
   .profile-dropdown {
@@ -304,6 +325,12 @@
     width: 80%;
     margin: 10px auto;
     background: rgba(40, 51, 69, 0.95);
+    min-width: 220px;
+  }
+
+  .profile-link {
+    width: 100%;
+    margin: 15px 0 5px 0;
   }
 
   .nav-links.active li {

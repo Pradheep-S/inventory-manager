@@ -7,15 +7,19 @@ import Products from "./pages/Products";
 import Dashboard from "./admin/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import Auth from "./pages/Auth";
 import Carts from "./pages/Carts"; // Import the new Carts component
 import { CartProvider } from "./pages/CartContext.jsx"; // Updated path
-
+import { CheckoutProvider } from './pages/CheckoutContext.jsx'; // Updated path
+import Checkout from './pages/Checkout';
 function App() {
   return (
     <CartProvider> {/* Wrap the app with CartProvider */}
+      <CheckoutProvider>
+
       <Router>
         <Navbar />
         <Routes>
@@ -63,8 +67,26 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <PrivateRoute>
+                <Checkout />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
+    </CheckoutProvider>
     </CartProvider>
   );
 }

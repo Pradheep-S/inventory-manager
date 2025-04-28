@@ -264,6 +264,76 @@ app.get("/api/cart", verifyToken, async (req, res) => {
   }
 });
 
+// Get User Profile
+app.get('/api/profile', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findById(userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update Profile
+app.put('/api/profile/update', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { username, email } = req.body;
+
+    // Check if email or username already exists
+    const existingUser = await User.findOne({
+      $and: [
+        { _id: { $ne: userId } },
+        { $or: [{ email }, { username }] }
+      ]
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email or username already taken' });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { username, email },
+      { new: true }
+    ).select('-password');
+
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Change Password
+app.put('/api/profile/change-password', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Remove from Cart (User Only)
 app.delete("/api/cart/remove/:productId", verifyToken, async (req, res) => {
   try {

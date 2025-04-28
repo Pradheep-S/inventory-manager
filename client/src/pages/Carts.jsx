@@ -84,7 +84,7 @@ const Carts = () => {
         (item) => item.productId._id !== productId
       );
       setCartItems(updatedItems);
-      
+
       // Update cart count in context
       const count = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
       updateCartCount(count);
@@ -106,59 +106,16 @@ const Carts = () => {
     );
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/auth");
       return;
     }
 
-    setProcessingPayment(true);
-    try {
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        throw new Error("Razorpay SDK failed to load. Are you online?");
-      }
-
-      const amount = Math.round(calculateTotal() * 100);
-
-      const options = {
-        key: RAZORPAY_KEY_ID,
-        amount: amount,
-        currency: "INR",
-        name: "Mithun Electricals",
-        description: "Test Payment",
-        order_id: undefined,
-        handler: function (response) {
-          setNotification("Payment successful! This is a demo transaction.");
-          setCartItems([]);
-          updateCartCount(0);
-        },
-        prefill: {
-          name: "Test User",
-          email: "test.user@example.com",
-          contact: "7604940591",
-        },
-        notes: {
-          address: "Test Address",
-        },
-        theme: {
-          color: RAZORPAY_THEME_COLOR,
-        },
-      };
-
-      const razorpayInstance = new window.Razorpay(options);
-      
-      razorpayInstance.on("payment.failed", function (response) {
-        setError(`Payment failed: ${response.error.description}`);
-      });
-
-      razorpayInstance.open();
-    } catch (error) {
-      setError(error.message || "Failed to initiate payment. Please try again.");
-    } finally {
-      setProcessingPayment(false);
-    }
+    // Store cart items in localStorage for checkout process
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    navigate("/checkout");
   };
 
   return (
@@ -208,8 +165,8 @@ const Carts = () => {
       {cartItems.length > 0 && (
         <div className="cart-summary">
           <h3>Total Amount: {formatPrice(calculateTotal())}</h3>
-          <button 
-            className="checkout-btn" 
+          <button
+            className="checkout-btn"
             onClick={handleCheckout}
             disabled={processingPayment}
           >
