@@ -1,43 +1,64 @@
-import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "./CartContext.jsx";
+import { useCart } from "./CartContext";
 import "./Carts.css";
-import Footer from "../components/Footer.jsx";
+import Footer from "../components/Footer";
+import axios from "axios";
 
 const Carts = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [processingPayment, setProcessingPayment] = useState(false);
   const navigate = useNavigate();
   const { updateCartCount } = useCart();
 
-  const fetchCart = useCallback(async () => {
+  const RAZORPAY_KEY_ID = "rzp_test_qrB3kyGhLYMsvr";
+  const RAZORPAY_THEME_COLOR = "#3399cc";
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        return resolve(true);
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/auth");
       return;
     }
 
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await axios.get("http://localhost:5000/api/cart", {
-        headers: { "x-access-token": token },
-      });
-      setCartItems(res.data.items || []);
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      setError("Failed to fetch cart. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, [navigate]); // `navigate` is a dependency because it’s used inside fetchCart
+    const fetchCartItems = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:5000/api/cart", {
+          headers: { "x-access-token": token },
+        });
+        setCartItems(response.data.items || []);
+      } catch (err) {
+        setError("Failed to load cart items. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    fetchCart();
-  }, [fetchCart]); // Include fetchCart in the dependency array
+    fetchCartItems();
+  }, [navigate]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
@@ -48,31 +69,33 @@ const Carts = () => {
 
   const handleRemoveFromCart = async (productId) => {
     const token = localStorage.getItem("token");
-    try {
-      const itemToRemove = cartItems.find((item) => item.productId._id === productId);
-      const itemName = itemToRemove ? itemToRemove.productId.name : "Item";
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
 
+    try {
       await axios.delete(`http://localhost:5000/api/cart/remove/${productId}`, {
         headers: { "x-access-token": token },
       });
 
-      const updatedItems = cartItems.filter((item) => item.productId._id !== productId);
+      // Update local state
+      const updatedItems = cartItems.filter(
+        (item) => item.productId._id !== productId
+      );
       setCartItems(updatedItems);
 
-      const res = await axios.get("http://localhost:5000/api/cart", {
-        headers: { "x-access-token": token },
-      });
-      const items = res.data.items || [];
-      const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
-      updateCartCount(totalCount);
+      // Update cart count in context
+      const count = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+      updateCartCount(count);
 
+      const itemName = cartItems.find(
+        (item) => item.productId._id === productId
+      )?.productId.name || "Item";
       setNotification(`${itemName} removed`);
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    // eslint-disable-next-line no-unused-vars
+      setTimeout(() => setNotification(null), 3000);
     } catch (err) {
-      setError("Failed to remove product from cart. Please try again.");
+      setError("Failed to remove item from cart. Please try again.");
     }
   };
 
@@ -81,6 +104,18 @@ const Carts = () => {
       (total, item) => total + item.productId.price * item.quantity,
       0
     );
+  };
+
+  const handleCheckout = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+
+    // Store cart items in localStorage for checkout process
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    navigate("/checkout");
   };
 
   return (
@@ -130,7 +165,13 @@ const Carts = () => {
       {cartItems.length > 0 && (
         <div className="cart-summary">
           <h3>Total Amount: {formatPrice(calculateTotal())}</h3>
-          <button className="checkout-btn">Proceed to Checkout</button>
+          <button
+            className="checkout-btn"
+            onClick={handleCheckout}
+            disabled={processingPayment}
+          >
+            {processingPayment ? "Processing..." : "Proceed to Checkout"}
+          </button>
         </div>
       )}
 

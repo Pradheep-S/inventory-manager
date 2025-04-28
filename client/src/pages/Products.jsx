@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "./CartContext.jsx"; // Import useCart from CartContext
+import { useCart } from "./CartContext";
 import "./Products.css";
 import Footer from "../components/Footer";
 
@@ -11,9 +12,9 @@ const Products = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("name");
-  const [notifications, setNotifications] = useState({}); // Object to track notifications per product
+  const [notifications, setNotifications] = useState({});
   const navigate = useNavigate();
-  const { updateCartCount } = useCart(); // Get updateCartCount from context
+  const { updateCartCount } = useCart();
 
   useEffect(() => {
     fetchProducts();
@@ -25,7 +26,6 @@ const Products = () => {
       setError(null);
       const res = await axios.get("http://localhost:5000/api/inventory");
       setProducts(res.data);
-    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("Failed to fetch products. Please try again.");
     } finally {
@@ -56,7 +56,6 @@ const Products = () => {
     }
 
     try {
-      // Add product to cart
       await axios.post(
         "http://localhost:5000/api/cart/add",
         { productId, quantity: 1 },
@@ -69,9 +68,8 @@ const Products = () => {
       });
       const items = res.data.items || [];
       const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
-      updateCartCount(totalCount); // Update the cart count dynamically
+      updateCartCount(totalCount);
 
-      // Show notification
       setNotifications((prev) => ({
         ...prev,
         [productId]: "Product added to cart!",
@@ -81,8 +79,7 @@ const Products = () => {
           ...prev,
           [productId]: null,
         }));
-      }, 3000); // Auto-dismiss after 3 seconds
-    // eslint-disable-next-line no-unused-vars
+      }, 3000);
     } catch (err) {
       setError("Failed to add product to cart. Please try again.");
     }
@@ -98,7 +95,7 @@ const Products = () => {
         ...prev,
         [productId]: null,
       }));
-    }, 3000); // Auto-dismiss after 3 seconds
+    }, 3000);
   };
 
   const filteredProducts = products
