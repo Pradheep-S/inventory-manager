@@ -30,7 +30,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/cart", {
+      const res = await axios.get("https://inventory-manager-wz40.onrender.com/api/cart", {
         headers: { "x-access-token": token },
       });
       const items = res.data.items || [];

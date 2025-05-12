@@ -46,7 +46,7 @@ const Carts = () => {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/cart", {
+        const response = await axios.get("https://inventory-manager-wz40.onrender.com/api/cart", {
           headers: { "x-access-token": token },
         });
         setCartItems(response.data.items || []);
@@ -75,7 +75,7 @@ const Carts = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/cart/remove/${productId}`, {
+      await axios.delete(`https://inventory-manager-wz40.onrender.com/api/cart/remove/${productId}`, {
         headers: { "x-access-token": token },
       });
 

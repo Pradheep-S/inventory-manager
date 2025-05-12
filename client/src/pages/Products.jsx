@@ -24,7 +24,7 @@ const Products = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("http://localhost:5000/api/inventory");
+      const res = await axios.get("https://inventory-manager-wz40.onrender.com/api/inventory");
       setProducts(res.data);
     } catch (err) {
       setError("Failed to fetch products. Please try again.");
@@ -57,13 +57,13 @@ const Products = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://inventory-manager-wz40.onrender.com/api/cart/add",
         { productId, quantity: 1 },
         { headers: { "x-access-token": token } }
       );
 
       // Fetch updated cart count
-      const res = await axios.get("http://localhost:5000/api/cart", {
+      const res = await axios.get("https://inventory-manager-wz40.onrender.com/api/cart", {
         headers: { "x-access-token": token },
       });
       const items = res.data.items || [];

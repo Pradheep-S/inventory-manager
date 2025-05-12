@@ -34,7 +34,7 @@ const Profile = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/profile', {
+        const response = await axios.get('https://inventory-manager-wz40.onrender.com/api/profile', {
           headers: { 'x-access-token': token }
         });
         setUser(response.data);
@@ -61,7 +61,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        'http://localhost:5000/api/profile/update',
+        'https://inventory-manager-wz40.onrender.com/api/profile/update',
         profileData,
         {
           headers: { 'x-access-token': token }
@@ -97,7 +97,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:5000/api/profile/change-password',
+        'https://inventory-manager-wz40.onrender.com/api/profile/change-password',
         {
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword

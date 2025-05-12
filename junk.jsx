@@ -16,7 +16,7 @@ const Auth = () => {
     e.preventDefault();
     try {
       if (isSignup) {
-        const response = await axios.post("http://localhost:5000/api/auth/register", {
+        const response = await axios.post("https://inventory-manager-wz40.onrender.com/api/auth/register", {
           username,
           email,
           password,
@@ -25,8 +25,8 @@ const Auth = () => {
         navigate("/auth");
       } else {
         const endpoint = isAdminLogin
-          ? "http://localhost:5000/api/auth/admin-login"
-          : "http://localhost:5000/api/auth/login";
+          ? "https://inventory-manager-wz40.onrender.com/api/auth/admin-login"
+          : "https://inventory-manager-wz40.onrender.com/api/auth/login";
         const res = await axios.post(endpoint, { email, password });
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));

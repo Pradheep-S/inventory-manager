@@ -14,8 +14,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const endpoint = isAdminLogin 
-        ? "http://localhost:5000/api/auth/admin-login" 
-        : "http://localhost:5000/api/auth/login";
+        ? "https://inventory-manager-wz40.onrender.com/api/auth/admin-login" 
+        : "https://inventory-manager-wz40.onrender.com/api/auth/login";
       
       const res = await axios.post(endpoint, { email, password });
       localStorage.setItem("token", res.data.token);

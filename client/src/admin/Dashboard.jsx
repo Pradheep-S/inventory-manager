@@ -21,9 +21,9 @@ const Dashboard = () => {
       setError(null);
 
       const [productsRes, lowStockRes, activitiesRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/inventory"),
-        axios.get("http://localhost:5000/api/inventory/low-stock"),
-        axios.get("http://localhost:5000/api/inventory/recent-activities"),
+        axios.get("https://inventory-manager-wz40.onrender.com/api/inventory"),
+        axios.get("https://inventory-manager-wz40.onrender.com/api/inventory/low-stock"),
+        axios.get("https://inventory-manager-wz40.onrender.com/api/inventory/recent-activities"),
       ]);
 
       setTotalProducts(productsRes.data.length);

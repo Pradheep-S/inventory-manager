@@ -42,7 +42,7 @@ const Inventory = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("http://localhost:5000/api/inventory");
+      const res = await axios.get("https://inventory-manager-wz40.onrender.com/api/inventory");
       setProducts(res.data);
     // eslint-disable-next-line no-unused-vars
     } catch (err) {
@@ -79,11 +79,11 @@ const Inventory = () => {
       
       if (editingProduct) {
         await axios.put(
-          `http://localhost:5000/api/inventory/update/${editingProduct._id}`,
+          `https://inventory-manager-wz40.onrender.com/api/inventory/update/${editingProduct._id}`,
           newProduct
         );
       } else {
-        await axios.post("http://localhost:5000/api/inventory/add", newProduct);
+        await axios.post("https://inventory-manager-wz40.onrender.com/api/inventory/add", newProduct);
       }
       
       await fetchProducts();
@@ -112,7 +112,7 @@ const Inventory = () => {
       try {
         setLoading(true);
         setError(null);
-        await axios.delete(`http://localhost:5000/api/inventory/delete/${productToDelete._id}`);
+        await axios.delete(`https://inventory-manager-wz40.onrender.com/api/inventory/delete/${productToDelete._id}`);
         await fetchProducts();
       // eslint-disable-next-line no-unused-vars
       } catch (err) {

@@ -52,7 +52,7 @@ const OrderSummary = ({ onBack }) => {
       // Handle COD order
       try {
         // Simulate API call to create order (replace with actual API call)
-        // await axios.post('http://localhost:5000/api/orders', { ...orderData }, { headers });
+        // await axios.post('https://inventory-manager-wz40.onrender.com/api/orders', { ...orderData }, { headers });
         localStorage.removeItem('cartItems');
         updateCartCount(0);
         navigate('/order-success');
